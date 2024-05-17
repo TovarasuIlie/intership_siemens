@@ -1,0 +1,106 @@
+<app-header></app-header>
+<div class="container d-flex flex-column justify-content-center align-items-center">
+    <div class="card">
+        <div class="card-header">
+            <h3>Aplicatie Booking</h3>
+        </div>
+        <div class="card-body" style="min-width: 500px;">
+            <form [formGroup]="searchForm" (ngSubmit)="searchForHotels()">
+                <div class="input-group mb-3">
+                    <div class="form-floating">
+                        <input formControlName="searchDistance" type="number" class="form-control" id="floatingInput"
+                            placeholder="name@example.com" aria-describedby="basic-addon2">
+                        <label for="floatingInput">Introduce-ti distanta</label>
+                    </div>
+                    <span class="input-group-text" id="basic-addon2">Km</span>
+                </div>
+                <div *ngIf="errorMessages.length > 0" class="alert alert-danger">
+                    <div *ngFor="let error of errorMessages">
+                        {{error}}
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-sm btn-success p-3 w-100">Cauta!</button>
+            </form>
+        </div>
+    </div>
+    <div *ngIf="foundHotels.length > 0  && formSubmited" class="container mt-5">
+        <div class="card mb-3" *ngFor="let hotel of foundHotels">
+            <div class="card-body">
+                <table class="table">
+                    <tbody>
+                        <tr>
+                            <td>Nume Hotel:</td>
+                            <td><b>{{ hotel.name }}</b></td>
+                        </tr>
+                        <tr>
+                            <td>Total Camere Hotel:</td>
+                            <td><b>{{ hotel.rooms.length }}</b></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <a [routerLink]="['hotel-details', hotel.id]" class="btn btn-info m-3">Vezi detalii!</a>
+        </div>
+    </div>
+    <div *ngIf="foundHotels.length === 0 && formSubmited" class="container mt-5">
+        <div class="alert alert-warning">
+            Nu a fost gasit nici un hotel in raza cautata.
+        </div>
+    </div>
+</div>
+<div class="container">
+    <h4 class="fw-semiblod mt-5 mb-5">Camere Rezervate de Dumneavoastra</h4>
+    <div *ngIf="successMessages.length > 0" class="alert alert-success">
+        <div *ngFor="let success of successMessages">
+            {{success}}
+        </div>
+    </div>
+    <div class="row row-cols-2 row-cols-lg-4 g-2 g-lg-3">
+        <div class="col" *ngFor="let reservation of reservedRoom">
+            <div class="card mb-3">
+                <div class="card-body">
+                    <table class="table">
+                        <tbody>
+                            <tr>
+                                <td>Nume Hotel:</td>
+                                <td><a [routerLink]="['hotel-details', reservation.hotel.id]" class="text-decoration-none"><b>{{ reservation.hotel.name }}</b></a></td>
+                            </tr>
+                            <tr>
+                                <td>Numar camera:</td>
+                                <td><b>{{ reservation.room.roomNumber }}</b></td>
+                            </tr>
+                            <tr>
+                                <td>Tip camera:</td>
+                                <td><b>{{ roomTypes[reservation.room.type - 1] }}</b></td>
+                            </tr>
+                            <tr>
+                                <td>Camera este:</td>
+                                <td>
+                                    <span *ngIf="reservation.room.available" class="badge bg-success">Libera</span>
+                                    <span *ngIf="!reservation.room.available" class="badge bg-danger">Ocupata</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Pret camera:</td>
+                                <td><b>{{ reservation.room.price }} lei</b></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <form [formGroup]="changeRoomForm" (ngSubmit)="changeRoom(reservation.id)" class="mb-3">
+                        <div class="form-floating mb-3">
+                            <select formControlName="roomID" class="form-select" id="floatingSelect" aria-label="Floating label select example">
+                                <option selected [value]="0">Alege numarul camerei</option>
+                                <option *ngFor="let room of getHotel(reservation.hotel.rooms)" [value]="room.id">{{ room.roomNumber }}</option>
+                            </select>
+                            <label for="floatingSelect">Alege alta camera!</label>
+                        </div>
+                        <button  class="btn btn-sm btn-warning">Schimba camera!</button>
+                    </form>
+
+                    <button type="submit" class="btn btn-sm btn-danger" *ngIf="!reservation.room.available"
+                        (click)="cancelReservation(reservation.id)">Anuleaza Rezervare</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

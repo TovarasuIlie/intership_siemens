@@ -1,0 +1,19 @@
+<app-header></app-header>
+<div class="container">
+    <div class="card mb-3" *ngFor="let hotel of hotels">
+        <div class="card-body">
+            <table class="table">
+                <tbody>
+                    <tr>
+                        <td>Nume Hotel:</td>
+                        <td><b>{{ hotel.name }}</b></td>
+                    </tr>
+                    <tr>
+                        <td>Total Camere Hotel:</td>
+                        <td><b>{{ hotel.rooms.length }}</b></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

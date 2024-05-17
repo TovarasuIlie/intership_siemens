@@ -1,0 +1,78 @@
+<div class="container mt-5">
+    <div class="card">
+        <div class="card-header">
+            <h3>{{ hotel.name }}</h3>
+        </div>
+        <div class="card-body">
+            <table class="table">
+                <tbody>
+                    <tr>
+                        <td>Nume Hotel:</td>
+                        <td><b>{{ hotel.name }}</b></td>
+                    </tr>
+                    <tr>
+                        <td>Camere Hotel:</td>
+                        <td><b>{{ hotel.rooms.length }}</b></td>
+                    </tr>
+                    <tr>
+                        <td>Camere Valabile:</td>
+                        <td><b>{{ avaibleRooms }}</b></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <h4 class="fw-semiblod mt-5 mb-5">Camere Disponibile</h4>
+    <div class="row row-cols-2 row-cols-lg-4 g-2 g-lg-3">
+        <div class="col" *ngFor="let room of availableRooms">
+            <div class="card mb-3">
+                <div class="card-body">
+                    <table class="table">
+                        <tbody>
+                            <tr>
+                                <td>Numar camera:</td>
+                                <td><b>{{ room.roomNumber }}</b></td>
+                            </tr>
+                            <tr>
+                                <td>Tip camera:</td>
+                                <td><b>{{ roomTypes[room.type - 1] }}</b></td>
+                            </tr>
+                            <tr>
+                                <td>Camera este:</td>
+                                <td>
+                                    <span *ngIf="room.available" class="badge bg-success">Libera</span>
+                                    <span *ngIf="!room.available" class="badge bg-danger">Ocupata</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Pret camera:</td>
+                                <td><b>{{ room.price }} lei</b></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <button class="btn btn-sm btn-success" *ngIf="room.available" (click)="reserveRoom(1, room.id)">Rezerva Camera</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <h4 class="fw-semiblod mt-5 mb-5">Feedback</h4>
+    <div class="container mb-5">
+        <div class="card mb-3" *ngFor="let feedback of feedbacks">
+            <div class="card-header">
+                <h5>Postat de: <b>{{ feedback.user.name }}</b></h5>
+            </div>
+            <div class="card-body">
+                <p>{{ feedback.feedback }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="container mb-5">
+        <form [formGroup]="feedbackForm" (ngSubmit)="postFeedback()">
+            <div class="form-floating mb-3">
+                <textarea formControlName="feedback" class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" style="height: 100px"></textarea>
+                <label for="floatingTextarea2">Comments</label>
+            </div>
+            <button type="submit" class="btn btn-success">Posteaza!</button>
+        </form>
+    </div>
+</div>
